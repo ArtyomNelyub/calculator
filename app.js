@@ -45,3 +45,72 @@ const ALL_BUTTONS = [
   [equal, 'Enter'],
   [point, '.'],
 ];
+
+ALL_BUTTONS.forEach((button) => {
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+    if (e.key === button[1]) {
+      connectHandlers(button);
+    }
+  });
+
+  button[0].addEventListener('click', () => connectHandlers(button));
+});
+
+function connectHandlers(button) {
+  /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
+}
+
+function operatorHandler(operator) {
+  if (Object.values(errors).includes(result.value)) {
+    result.value = '';
+    input.value = '';
+  }
+
+  let field = input.value;
+
+  if (result.value) {
+    input.value = result.value;
+    result.value = '';
+  }
+
+  if (field === '') {
+    if (operator[0] === minus) {
+      input.value += operator[1];
+    }
+    return;
+  }
+
+  if (field === '-') {
+    return;
+  }
+
+  //Если конец строки вида " (оператор)" и нажимается "-", добавить минус " (оператор) -"
+  if (/\s[\+\-\*\/\%]\s$/.test(field) && operator[0] === minus) {
+    input.value += operator[1];
+    return;
+  }
+
+  //Если конец строки вида " (оператор) -" следующее нажатие на оператор заменит на " (новыйОператор) "
+  if (/\s[\+\-\*\/\%]\s-$/.test(field)) {
+    input.value = field.slice(0, field.length - 3) + operator[1] + ' ';
+    return;
+  }
+
+  // Если конец строки вида "(оператор) ", следующее нажатие на оператор заменит на "(новОператор) "
+  if (/[\+\-\*\/\%]\s$/.test(field)) {
+    input.value = field.slice(0, field.length - 2) + operator[1] + ' ';
+    return;
+  }
+
+  if (operator[0] === percent) {
+    if (/\d$/.test(field)) {
+      input.value += '%';
+      return;
+    }
+  }
+
+  input.value += ` ${operator[1]} `;
+}

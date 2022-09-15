@@ -62,6 +62,7 @@ ALL_BUTTONS.forEach((button) => {
 function connectHandlers(button) {
   /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
   /\d/.test(button[1]) && numberHandler(button[1]);
+  /\./.test(button[1]) && pointHandler();
   /Enter/.test(button[1]) && equalHandler();
   /Escape/.test(button[1]) && clearHandler();
 }
@@ -141,6 +142,23 @@ function numberHandler(number) {
   }
 
   input.value += number;
+}
+
+function pointHandler() {
+  if (result.value) {
+    result.value = '';
+    input.value = '';
+  }
+  // Если строка заканчивается на "." или ".(любое кол-во цифр)", то пропустить
+  if (/(\.\d+$)|(\.$)/.test(input.value)) {
+    return;
+  }
+
+  if (/\d+$/.test(input.value)) {
+    input.value += '.';
+    return;
+  }
+  input.value += '0.';
 }
 
 function clearHandler() {

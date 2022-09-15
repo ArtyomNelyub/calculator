@@ -63,6 +63,7 @@ function connectHandlers(button) {
   /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
   /\d/.test(button[1]) && numberHandler(button[1]);
   /Enter/.test(button[1]) && equalHandler();
+  /Escape/.test(button[1]) && clearHandler();
 }
 
 function operatorHandler(operator) {
@@ -140,6 +141,11 @@ function numberHandler(number) {
   }
 
   input.value += number;
+}
+
+function clearHandler() {
+  input.value = '';
+  result.value = '';
 }
 
 function equalHandler() {

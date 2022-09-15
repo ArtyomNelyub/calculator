@@ -9,7 +9,113 @@
   </head>
   <body>
     <div class="wrapper">
-      <div class="container"></div>
+      <div class="container">
+        <div class="view">
+          <textarea
+            type="text"
+            class="view__expression"
+            id="expression"
+            readonly
+            wrap="hard"
+          ></textarea>
+          <input type="text" class="view__result" id="result" readonly />
+        </div>
+        <div class="buttons">
+          <button class="buttons__button buttons__button-number one" id="one">
+            1
+          </button>
+          <button class="buttons__button buttons__button-number two" id="two">
+            2
+          </button>
+          <button
+            class="buttons__button buttons__button-number three"
+            id="three"
+          >
+            3
+          </button>
+          <button class="buttons__button buttons__button-number four" id="four">
+            4
+          </button>
+          <button class="buttons__button buttons__button-number five" id="five">
+            5
+          </button>
+          <button class="buttons__button buttons__button-number six" id="six">
+            6
+          </button>
+          <button
+            class="buttons__button buttons__button-number seven"
+            id="seven"
+          >
+            7
+          </button>
+          <button
+            class="buttons__button buttons__button-number eight"
+            id="eight"
+          >
+            8
+          </button>
+          <button class="buttons__button buttons__button-number nine" id="nine">
+            9
+          </button>
+          <button class="buttons__button buttons__button-number zero" id="zero">
+            0
+          </button>
+          <button
+            class="buttons__button buttons__button-operator plus"
+            id="plus"
+          >
+            +
+          </button>
+          <button
+            class="buttons__button buttons__button-operator minus"
+            id="minus"
+          >
+            -
+          </button>
+          <button
+            class="buttons__button buttons__button-operator multiply"
+            id="multiply"
+          >
+            *
+          </button>
+          <button
+            class="buttons__button buttons__button-operator divide"
+            id="divide"
+          >
+            /
+          </button>
+          <button
+            class="buttons__button buttons__button-operator percent"
+            id="percent"
+          >
+            %
+          </button>
+          <button
+            class="buttons__button buttons__button-operator point"
+            id="point"
+          >
+            .
+          </button>
+          <button
+            class="buttons__button buttons__button-operator equal"
+            id="equal"
+          >
+            =
+          </button>
+          <button
+            class="buttons__button buttons__button-operator clear"
+            id="clear"
+          >
+            C
+          </button>
+          <button
+            class="buttons__button buttons__button-operator delete"
+            id="delete"
+          >
+            DEL
+          </button>
+        </div>
+      </div>
     </div>
     <script src="app.js"></script>
   </body>

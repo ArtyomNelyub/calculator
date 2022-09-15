@@ -62,6 +62,7 @@ ALL_BUTTONS.forEach((button) => {
 function connectHandlers(button) {
   /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
   /\d/.test(button[1]) && numberHandler(button[1]);
+  /Enter/.test(button[1]) && equalHandler();
 }
 
 function operatorHandler(operator) {
@@ -139,4 +140,91 @@ function numberHandler(number) {
   }
 
   input.value += number;
+}
+
+function equalHandler() {
+  if (input.value.length === 0) {
+    return;
+  }
+
+  let array = getArrayFromStrExpression(input.value);
+  let answer = calculateArrayExpression(array);
+  result.value = answer.toString();
+}
+
+function getArrayFromStrExpression(str) {
+  // Если конец строки вида ' (оператор) ', обрезать
+  if (/\s[\+\-\*\/\%]\s$/.test(str)) {
+    str = str.slice(0, str.length - 3);
+    input.value = str;
+  }
+
+  // Если конец строки вида ' (оператор) -', обрезать
+  if (/\s[\+\-\*\/\%]\s-$/.test(str)) {
+    str = str.slice(0, str.length - 4);
+    input.value = str;
+  }
+
+  let result = str.split(' ').map((i) => (i === '.' ? 0 : i));
+
+  return result;
+}
+
+function calculateArrayExpression(arr) {
+  try {
+    let priorities = [/^\%$/, /^[\*\/]$/, /^[\+\-]$/];
+
+    priorities.forEach((priority) => {
+      for (let i = 0; i < arr.length; i++) {
+        if (priority.test(arr[i])) {
+          let gap = calculate(arr[i - 1], arr[i + 1], arr[i]);
+          arr.splice(i - 1, 3, gap);
+          i--;
+        }
+      }
+    });
+
+    return arr[0];
+  } catch (e) {
+    return e.message;
+  }
+}
+
+function calculate(a, b, operator) {
+  function roundNumber(numb) {
+    return Number(parseFloat(numb).toFixed(DECIMAL_PLACE));
+  }
+
+  if (/\%$/.test(a)) {
+    a = parseFloat(a) / 100;
+  }
+
+  if (/\%$/.test(b)) {
+    b = (parseFloat(a) * parseFloat(b)) / 100;
+  }
+
+  a = roundNumber(a);
+  b = roundNumber(b);
+
+  if (!Number.isFinite(a) || !Number.isFinite(b)) {
+    throw new Error(errors.incorrect);
+  }
+
+  switch (operator) {
+    case '+':
+      return roundNumber(a + b);
+    case '-':
+      return roundNumber(a - b);
+    case '*':
+      return roundNumber(a * b);
+    case '/':
+      if (b === 0) {
+        throw new Error(errors.dividingByZero);
+      }
+      return roundNumber(a / b);
+    case '%':
+      return roundNumber((b * a) / 100);
+    default:
+      throw new Error(errors.incorrect);
+  }
 }

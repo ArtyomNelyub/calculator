@@ -24,6 +24,11 @@ const point = document.getElementById('point');
 const clear = document.getElementById('clear');
 const equal = document.getElementById('equal');
 
+const errors = {
+  dividingByZero: 'Делить на ноль нельзя',
+  incorrect: 'Некорректный ввод',
+};
+
 const ALL_BUTTONS = [
   [plus, '+'],
   [minus, '-'],
@@ -60,10 +65,11 @@ ALL_BUTTONS.forEach((button) => {
 });
 
 function connectHandlers(button) {
-  /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
   /\d/.test(button[1]) && numberHandler(button[1]);
+  /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
   /\./.test(button[1]) && pointHandler();
   /Enter/.test(button[1]) && equalHandler();
+  /Backspace/.test(button[1]) && delHandler();
   /Escape/.test(button[1]) && clearHandler();
 }
 
@@ -159,6 +165,26 @@ function pointHandler() {
     return;
   }
   input.value += '0.';
+}
+
+function delHandler() {
+  if (Object.values(errors).includes(result.value)) {
+    result.value = '';
+  }
+
+  // Если конец строки вида " (оператор) ", удалить 3 знака
+  if (/\s[\+\-\*\/\%]\s$/.test(input.value)) {
+    input.value = input.value.slice(0, input.value.length - 3);
+    return;
+  }
+
+  //Если конец строки вида " " удалить 2 знака
+  if (/\s$/.test(input.value)) {
+    input.value = input.value.slice(0, input.value.length - 2);
+    return;
+  }
+
+  input.value = input.value.slice(0, input.value.length - 1);
 }
 
 function clearHandler() {

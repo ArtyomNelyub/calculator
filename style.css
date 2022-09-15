@@ -90,13 +90,14 @@ body {
   display: grid;
   background: #454545;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(4, 1fr);
+  grid-template-rows: repeat(5, 1fr);
   gap: 5px;
   grid-template-areas:
-    'seven eight nine plus delete'
+    'percent point divide multiply exponentiation'
+    'seven eight nine minus delete'
     'four five six minus clear'
-    'one two three multiply equal'
-    'point zero percent divide equal';
+    'one two three plus equal'
+    'zero zero zero plus equal';
 }
 .buttons__button {
   display: flex;
@@ -161,6 +162,9 @@ body {
 }
 .multiply {
   grid-area: multiply;
+}
+.exponentiation {
+  grid-area: exponentiation;
 }
 .divide {
   grid-area: divide;

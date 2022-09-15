@@ -18,6 +18,7 @@ const minus = document.getElementById('minus');
 const multiply = document.getElementById('multiply');
 const divide = document.getElementById('divide');
 const percent = document.getElementById('percent');
+const exponentiation = document.getElementById('exponentiation');
 
 const del = document.getElementById('delete');
 const point = document.getElementById('point');
@@ -49,6 +50,7 @@ const ALL_BUTTONS = [
   [clear, 'Escape'],
   [equal, 'Enter'],
   [point, '.'],
+  [exponentiation, '^'],
 ];
 
 ALL_BUTTONS.forEach((button) => {
@@ -66,7 +68,7 @@ ALL_BUTTONS.forEach((button) => {
 
 function connectHandlers(button) {
   /\d/.test(button[1]) && numberHandler(button[1]);
-  /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
+  /[\+\-\*\/\%\^]/.test(button[1]) && operatorHandler(button);
   /\./.test(button[1]) && pointHandler();
   /Enter/.test(button[1]) && equalHandler();
   /Backspace/.test(button[1]) && delHandler();
@@ -98,19 +100,19 @@ function operatorHandler(operator) {
   }
 
   //Если конец строки вида " (оператор)" и нажимается "-", добавить минус " (оператор) -"
-  if (/\s[\+\-\*\/\%]\s$/.test(field) && operator[0] === minus) {
+  if (/\s[\+\-\*\/\%\^]\s$/.test(field) && operator[0] === minus) {
     input.value += operator[1];
     return;
   }
 
   //Если конец строки вида " (оператор) -" следующее нажатие на оператор заменит на " (новыйОператор) "
-  if (/\s[\+\-\*\/\%]\s-$/.test(field)) {
+  if (/\s[\+\-\*\/\%\^]\s-$/.test(field)) {
     input.value = field.slice(0, field.length - 3) + operator[1] + ' ';
     return;
   }
 
   // Если конец строки вида "(оператор) ", следующее нажатие на оператор заменит на "(новОператор) "
-  if (/[\+\-\*\/\%]\s$/.test(field)) {
+  if (/[\+\-\*\/\%\^]\s$/.test(field)) {
     input.value = field.slice(0, field.length - 2) + operator[1] + ' ';
     return;
   }
@@ -173,7 +175,7 @@ function delHandler() {
   }
 
   // Если конец строки вида " (оператор) ", удалить 3 знака
-  if (/\s[\+\-\*\/\%]\s$/.test(input.value)) {
+  if (/\s[\+\-\*\/\%\^]\s$/.test(input.value)) {
     input.value = input.value.slice(0, input.value.length - 3);
     return;
   }
@@ -204,13 +206,13 @@ function equalHandler() {
 
 function getArrayFromStrExpression(str) {
   // Если конец строки вида ' (оператор) ', обрезать
-  if (/\s[\+\-\*\/\%]\s$/.test(str)) {
+  if (/\s[\+\-\*\/\%\^]\s$/.test(str)) {
     str = str.slice(0, str.length - 3);
     input.value = str;
   }
 
   // Если конец строки вида ' (оператор) -', обрезать
-  if (/\s[\+\-\*\/\%]\s-$/.test(str)) {
+  if (/\s[\+\-\*\/\%\^]\s-$/.test(str)) {
     str = str.slice(0, str.length - 4);
     input.value = str;
   }
@@ -222,7 +224,7 @@ function getArrayFromStrExpression(str) {
 
 function calculateArrayExpression(arr) {
   try {
-    let priorities = [/^\%$/, /^[\*\/]$/, /^[\+\-]$/];
+    let priorities = [/^[\%\^]$/, /^[\*\/]$/, /^[\+\-]$/];
 
     priorities.forEach((priority) => {
       for (let i = 0; i < arr.length; i++) {
@@ -274,6 +276,8 @@ function calculate(a, b, operator) {
       return roundNumber(a / b);
     case '%':
       return roundNumber((b * a) / 100);
+    case '^':
+      return Math.pow(a, b);
     default:
       throw new Error(errors.incorrect);
   }

@@ -61,6 +61,7 @@ ALL_BUTTONS.forEach((button) => {
 
 function connectHandlers(button) {
   /[\+\-\*\/\%]/.test(button[1]) && operatorHandler(button);
+  /\d/.test(button[1]) && numberHandler(button[1]);
 }
 
 function operatorHandler(operator) {
@@ -113,4 +114,29 @@ function operatorHandler(operator) {
   }
 
   input.value += ` ${operator[1]} `;
+}
+
+function numberHandler(number) {
+  let field = input.value;
+
+  if (result.value) {
+    result.value = '';
+    input.value = '';
+  }
+
+  if (/\%$/.test(field)) {
+    input.value = field.slice(0, field.length - 1) + ` % ${number}`;
+    return;
+  }
+
+  if (field === '0') {
+    if (number === '0') {
+      return;
+    } else {
+      input.value = number;
+      return;
+    }
+  }
+
+  input.value += number;
 }

@@ -1,3 +1,4 @@
+@import url(https://fonts.googleapis.com/css?family=Source+Code+Pro:300,regular,500,600);
 *,
 *::before,
 *::after {
@@ -21,18 +22,164 @@ html,
 body {
   height: 100%;
   line-height: 1;
+  background: url(https://www.meme-arsenal.com/memes/870d810bf330229befaec727fe66fdb9.jpg)
+    center / cover no-repeat;
+  font-family: 'Source Code Pro';
+  font-size: 32px;
+  font-weight: 600;
 }
 
 .wrapper {
   min-height: 100%;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
 }
 
 .container {
+  flex: 0 1 650px;
+  min-height: 500px;
   display: flex;
   flex-direction: column;
+  row-gap: 5px;
+  padding: 10px;
+  background-color: #454545;
+  box-shadow: 0px 0px 15px 2px #e3e3e3;
+  border-radius: 5px;
+}
+.view {
+  flex: 2 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.view__expression {
+  flex: 2 0 auto;
+  border: 2px solid rgb(197, 197, 197);
+  border-radius: 5px;
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
-  gap: 15px;
+  overflow: auto;
+  resize: none;
+  font-size: 24px;
+  font-weight: regular;
+  background: #5b5b5b;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 0 10px;
+  text-align: right;
+}
+.view__result {
+  flex: 1 0 auto;
+  min-height: 30%;
+  border: 2px solid rgb(197, 197, 197);
+  border-radius: 5px;
+  display: flex;
+  background: #5b5b5b;
+  color: #f1f1f1;
+  padding: 0 10px;
+  text-align: right;
+}
+.buttons {
+  flex: 8 1 70%;
+  display: grid;
+  background: #454545;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  gap: 5px;
+  grid-template-areas:
+    'seven eight nine plus delete'
+    'four five six minus clear'
+    'one two three multiply equal'
+    'point zero percent divide equal';
+}
+.buttons__button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+  border-radius: 15px;
+  background-color: rgb(49, 49, 49);
+  color: white;
+  border: 2px solid rgb(49, 49, 49);
+}
+.buttons__button:active {
+  border: 2px solid #e3e3e3;
+  transition: all 0.2s ease 0s;
+}
+.buttons__button-number {
+}
+.buttons__button-operator {
+  background-color: lightskyblue;
+  color: #454545;
+}
+.equal {
+}
+.zero {
+}
+
+.one {
+  grid-area: one;
+}
+.two {
+  grid-area: two;
+}
+.three {
+  grid-area: three;
+}
+.four {
+  grid-area: four;
+}
+.five {
+  grid-area: five;
+}
+.six {
+  grid-area: six;
+}
+.seven {
+  grid-area: seven;
+}
+.eight {
+  grid-area: eight;
+}
+.nine {
+  grid-area: nine;
+}
+.zero {
+  grid-area: zero;
+}
+.plus {
+  grid-area: plus;
+}
+.minus {
+  grid-area: minus;
+}
+.multiply {
+  grid-area: multiply;
+}
+.divide {
+  grid-area: divide;
+}
+.percent {
+  grid-area: percent;
+}
+.point {
+  grid-area: point;
+}
+.equal {
+  grid-area: equal;
+  background-color: lightsalmon;
+  color: rgb(45, 45, 45);
+}
+.clear {
+  grid-area: clear;
+  background-color: lightgreen;
+  color: rgb(45, 45, 45);
+}
+.delete {
+  grid-area: delete;
+  background-color: lightcoral;
+  color: rgb(45, 45, 45);
 }

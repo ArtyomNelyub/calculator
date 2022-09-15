@@ -277,7 +277,7 @@ function calculate(a, b, operator) {
     case '%':
       return roundNumber((b * a) / 100);
     case '^':
-      return Math.pow(a, b);
+      return roundNumber(Math.pow(a, b));
     default:
       throw new Error(errors.incorrect);
   }

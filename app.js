@@ -242,6 +242,32 @@ function calculateArrayExpression(arr) {
   }
 }
 
+function makeArraysFromBrackets(arr) {
+  while (arr.indexOf('(') !== -1) {
+    makeArrayFromDeepBrackets(arr);
+  }
+
+  function makeArrayFromDeepBrackets(arr) {
+    let start = -1;
+
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] === '(') {
+        start = i;
+      }
+    }
+
+    let end = arr.indexOf(')', start);
+    let gap = arr.slice(start + 1, end);
+    let count = gap.length;
+    let result = calculateArrayExpression(gap);
+    arr.splice(start, count + 2, result);
+
+    return arr;
+  }
+
+  return arr;
+}
+
 function calculate(a, b, operator) {
   function roundNumber(numb) {
     return Number(parseFloat(numb).toFixed(DECIMAL_PLACE));

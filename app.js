@@ -1,6 +1,7 @@
 const input = document.getElementById('expression');
 const result = document.getElementById('result');
 const DECIMAL_PLACE = 8;
+let bracketCounter = 0;
 
 const zero = document.getElementById('zero');
 const one = document.getElementById('one');
@@ -19,6 +20,8 @@ const multiply = document.getElementById('multiply');
 const divide = document.getElementById('divide');
 const percent = document.getElementById('percent');
 const exponentiation = document.getElementById('exponentiation');
+const openBracket = document.getElementById('open-bracket');
+const closedBracket = document.getElementById('closed-bracket');
 
 const del = document.getElementById('delete');
 const point = document.getElementById('point');
@@ -50,6 +53,8 @@ const ALL_BUTTONS = [
   [clear, 'Escape'],
   [equal, 'Enter'],
   [point, '.'],
+  [openBracket, '('],
+  [closedBracket, ')'],
   [exponentiation, '^'],
 ];
 
@@ -73,6 +78,77 @@ function connectHandlers(button) {
   /Enter/.test(button[1]) && equalHandler();
   /Backspace/.test(button[1]) && delHandler();
   /Escape/.test(button[1]) && clearHandler();
+  /[\(\)]/.test(button[1]) && bracketHandler(button);
+}
+
+function bracketHandler(bracket) {
+  if (bracket[0] === openBracket) {
+    bracketCounter++;
+
+    if (input.value === '') {
+      input.value += `${bracket[1]}`;
+      return;
+    }
+
+    if (/[\d\%\.]$/.test(input.value)) {
+      input.value += ` * ${bracket[1]}`;
+      return;
+    }
+
+    if (/[\+\-\*\/\%\^]\s\-$/.test(input.value)) {
+      input.value += `1 * ${bracket[1]}`;
+      return;
+    }
+
+    if (/[\+\-\*\/\%\^]\s$/.test(input.value)) {
+      input.value += `${bracket[1]}`;
+      return;
+    }
+
+    if (/\)$/.test(input.value)) {
+      input.value += ` * ${bracket[1]}`;
+      return;
+    }
+
+    if (/\($/.test(input.value)) {
+      input.value += ` ${bracket[1]}`;
+      return;
+    }
+
+    input.value += bracket[1];
+  }
+
+  if (bracket[0] === closedBracket) {
+    if (bracketCounter === 0) {
+      return;
+    }
+
+    bracketCounter--;
+
+    if (/[\d\%\.]$/.test(input.value)) {
+      input.value += ` ${bracket[1]}`;
+      return;
+    }
+
+    if (/[\+\-\*\/\%\^]\s$/.test(input.value)) {
+      return;
+    }
+
+    if (/\)$/.test(input.value)) {
+      input.value += ` ${bracket[1]}`;
+      return;
+    }
+
+    if (/\($/.test(input.value)) {
+      input.value += ` 0 ${bracket[1]}`;
+      return;
+    }
+
+    if (/\-$/.test(input.value)) {
+      return;
+    }
+    input.value += bracket[1];
+  }
 }
 
 function operatorHandler(operator) {
@@ -81,12 +157,12 @@ function operatorHandler(operator) {
     input.value = '';
   }
 
-  let field = input.value;
-
   if (result.value) {
     input.value = result.value;
     result.value = '';
   }
+
+  let field = input.value;
 
   if (field === '') {
     if (operator[0] === minus) {
@@ -95,11 +171,27 @@ function operatorHandler(operator) {
     return;
   }
 
+  if (/\($/.test(field)) {
+    if (operator[0] === minus) {
+      input.value += ` ${operator[1]}`;
+    }
+    return;
+  }
+
+  if (/\)$/.test(field)) {
+    input.value += ` ${operator[1]} `;
+    return;
+  }
+
+  if (/\(\s\-$/.test(field)) {
+    return;
+  }
+
   if (field === '-') {
     return;
   }
 
-  //Если конец строки вида " (оператор)" и нажимается "-", добавить минус " (оператор) -"
+  //Если конец строки вида " (оператор) " и нажимается "-", добавить минус " (оператор) -"
   if (/\s[\+\-\*\/\%\^]\s$/.test(field) && operator[0] === minus) {
     input.value += operator[1];
     return;
@@ -111,8 +203,8 @@ function operatorHandler(operator) {
     return;
   }
 
-  // Если конец строки вида "(оператор) ", следующее нажатие на оператор заменит на "(новОператор) "
-  if (/[\+\-\*\/\%\^]\s$/.test(field)) {
+  // Если конец строки вида " (оператор) ", следующее нажатие на оператор заменит на " (новОператор) "
+  if (/\s[\+\-\*\/\%\^]\s$/.test(field)) {
     input.value = field.slice(0, field.length - 2) + operator[1] + ' ';
     return;
   }
@@ -149,6 +241,25 @@ function numberHandler(number) {
     }
   }
 
+  if (/\)$/.test(field)) {
+    input.value += ` * ${number}`;
+    return;
+  }
+
+  if (/\($/.test(field)) {
+    input.value += ` ${number}`;
+    return;
+  }
+
+  if (/\s0$/.test(input.value)) {
+    if (number === '0') {
+      return;
+    } else {
+      input.value = field.slice(0, field.length - 1) + number;
+      return;
+    }
+  }
+
   input.value += number;
 }
 
@@ -157,7 +268,7 @@ function pointHandler() {
     result.value = '';
     input.value = '';
   }
-  // Если строка заканчивается на "." или ".(любое кол-во цифр)", то пропустить
+
   if (/(\.\d+$)|(\.$)/.test(input.value)) {
     return;
   }
@@ -166,6 +277,22 @@ function pointHandler() {
     input.value += '.';
     return;
   }
+
+  if (/\)$/.test(input.value)) {
+    input.value += ` * 0.`;
+    return;
+  }
+
+  if (/\($/.test(input.value)) {
+    input.value += ` 0.`;
+    return;
+  }
+
+  if (/\%$/.test(input.value)) {
+    input.value = input.value.slice(0, input.value.length - 1) + ` % 0.`;
+    return;
+  }
+
   input.value += '0.';
 }
 
@@ -180,10 +307,28 @@ function delHandler() {
     return;
   }
 
-  //Если конец строки вида " " удалить 2 знака
-  if (/\s$/.test(input.value)) {
+  if (/\(\s\-$/.test(input.value)) {
     input.value = input.value.slice(0, input.value.length - 2);
     return;
+  }
+  if (/\(\s\d$/.test(input.value)) {
+    input.value = input.value.slice(0, input.value.length - 2);
+    return;
+  }
+
+  if (/\s[\+\-\*\/\%\^]\s\-$/.test(input.value)) {
+    input.value = input.value.slice(0, input.value.length - 1);
+    return;
+  }
+
+  if (/\)$/.test(input.value)) {
+    bracketCounter++;
+    input.value = input.value.slice(0, input.value.length - 2);
+    return;
+  }
+
+  if (/\($/.test(input.value)) {
+    bracketCounter--;
   }
 
   input.value = input.value.slice(0, input.value.length - 1);
@@ -192,11 +337,20 @@ function delHandler() {
 function clearHandler() {
   input.value = '';
   result.value = '';
+  bracketCounter = 0;
 }
 
 function equalHandler() {
   if (input.value.length === 0) {
     return;
+  }
+
+  while (bracketCounter > 0) {
+    if (/\($/.test(input.value)) {
+      input.value += ' 0';
+    }
+    input.value += ' )';
+    bracketCounter--;
   }
 
   let array = getArrayFromStrExpression(input.value);
@@ -217,7 +371,8 @@ function getArrayFromStrExpression(str) {
     input.value = str;
   }
 
-  let result = str.split(' ').map((i) => (i === '.' ? 0 : i));
+  let symbols = str.split(' ').map((i) => (i === '.' ? 0 : i));
+  let result = makeArraysFromBrackets(symbols);
 
   return result;
 }

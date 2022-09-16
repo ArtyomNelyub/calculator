@@ -113,17 +113,10 @@ body {
   border: 2px solid #e3e3e3;
   transition: all 0.2s ease 0s;
 }
-.buttons__button-number {
-}
 .buttons__button-operator {
   background-color: lightskyblue;
   color: #454545;
 }
-.equal {
-}
-.zero {
-}
-
 .one {
   grid-area: one;
 }

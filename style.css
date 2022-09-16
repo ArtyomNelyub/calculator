@@ -93,11 +93,11 @@ body {
   grid-template-rows: repeat(5, 1fr);
   gap: 5px;
   grid-template-areas:
-    'percent point divide multiply exponentiation'
-    'seven eight nine minus delete'
+    'ob cb percent point exponentiation'
+    'seven eight nine plus delete'
     'four five six minus clear'
-    'one two three plus equal'
-    'zero zero zero plus equal';
+    'one two three multiply equal'
+    'zero zero zero divide equal';
 }
 .buttons__button {
   display: flex;
@@ -113,17 +113,10 @@ body {
   border: 2px solid #e3e3e3;
   transition: all 0.2s ease 0s;
 }
-.buttons__button-number {
-}
 .buttons__button-operator {
   background-color: lightskyblue;
   color: #454545;
 }
-.equal {
-}
-.zero {
-}
-
 .one {
   grid-area: one;
 }
@@ -189,4 +182,10 @@ body {
   grid-area: delete;
   background-color: lightcoral;
   color: rgb(45, 45, 45);
+}
+.open-bracket {
+  grid-area: ob;
+}
+.closed-bracket {
+  grid-area: cb;
 }
